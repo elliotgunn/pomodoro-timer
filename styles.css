@@ -30,33 +30,38 @@ body {
 
 .container {
     background-color: var(--container-bg);
-    padding: 2rem;
-    border-radius: 1rem;
+    padding: 3rem;
+    border-radius: 1.5rem;
     box-shadow: 0 4px 6px var(--shadow-color);
     text-align: center;
     position: relative;
     transition: background-color 0.3s ease;
+    min-width: 400px;
 }
 
 .theme-toggle {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 2rem;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 0.8rem;
     border-radius: 50%;
     transition: all 0.3s ease;
     opacity: 0.8;
     filter: saturate(0.8);
+    z-index: 1000;
+    background-color: var(--container-bg);
+    box-shadow: 0 2px 4px var(--shadow-color);
 }
 
 .theme-toggle:hover {
     transform: scale(1.1) rotate(15deg);
     opacity: 1;
     filter: saturate(1.2);
+    box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 [data-theme="dark"] .theme-toggle {
@@ -69,15 +74,18 @@ body {
 
 h1 {
     color: var(--text-color);
-    margin-bottom: 1.5rem;
-    font-size: 2rem;
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
 }
 
 .timer {
-    font-size: 5rem;
+    font-size: 8rem;
     font-weight: bold;
     color: var(--text-color);
-    margin: 2rem 0;
+    margin: 3rem 0;
+    text-shadow: 2px 2px 4px var(--shadow-color);
+    font-family: monospace;
+    letter-spacing: -0.5rem;
 }
 
 .controls {
