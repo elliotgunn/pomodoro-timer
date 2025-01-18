@@ -135,3 +135,45 @@ button:hover {
     background-color: #74b9ff;
     color: white;
 }
+
+.tomato-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.bouncing-tomato {
+    position: absolute;
+    font-size: 10rem;
+    user-select: none;
+    animation: bounce 3s linear infinite;
+    opacity: 0.4;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.2));
+    will-change: transform;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(var(--x-move), var(--y-move)) rotate(90deg);
+    }
+
+    50% {
+        transform: translate(var(--x-move-rev), var(--y-move)) rotate(180deg);
+    }
+
+    75% {
+        transform: translate(var(--x-move), var(--y-move-rev)) rotate(270deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+}

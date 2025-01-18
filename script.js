@@ -7,6 +7,8 @@ class PomodoroTimer {
         this.resetButton = document.getElementById('reset');
         this.modeButtons = document.querySelectorAll('.mode-button');
         this.themeToggle = document.getElementById('theme-toggle');
+        this.tomatoContainer = document.getElementById('tomato-container');
+        this.activeTomatoes = [];
 
         this.timeLeft = 25 * 60; // 25 minutes in seconds
         this.timerId = null;
@@ -58,6 +60,33 @@ class PomodoroTimer {
         this.pause();
     }
 
+    createTomato() {
+        const tomato = document.createElement('div');
+        tomato.className = 'bouncing-tomato';
+        tomato.textContent = '🍅';
+
+        // Random starting position
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight;
+
+        // Random movement values
+        const xMove = (Math.random() - 0.5) * 300;
+        const yMove = (Math.random() - 0.5) * 300;
+
+        tomato.style.left = `${startX}px`;
+        tomato.style.top = `${startY}px`;
+        tomato.style.setProperty('--x-move', `${xMove}px`);
+        tomato.style.setProperty('--x-move-rev', `${-xMove}px`);
+        tomato.style.setProperty('--y-move', `${yMove}px`);
+        tomato.style.setProperty('--y-move-rev', `${-yMove}px`);
+
+        // Random animation duration between 3 and 6 seconds
+        tomato.style.animationDuration = `${3 + Math.random() * 3}s`;
+
+        this.tomatoContainer.appendChild(tomato);
+        this.activeTomatoes.push(tomato);
+    }
+
     start() {
         if (!this.isRunning) {
             this.isRunning = true;
@@ -69,6 +98,11 @@ class PomodoroTimer {
                     this.updateDisplay();
                 }
             }, 1000);
+
+            // Create bouncing tomatoes
+            for (let i = 0; i < 10; i++) {
+                this.createTomato();
+            }
         }
     }
 
@@ -78,6 +112,9 @@ class PomodoroTimer {
             clearInterval(this.timerId);
             this.timerId = null;
         }
+        // Remove all tomatoes
+        this.activeTomatoes.forEach(tomato => tomato.remove());
+        this.activeTomatoes = [];
     }
 
     reset() {
