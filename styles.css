@@ -48,11 +48,23 @@ body {
     cursor: pointer;
     padding: 0.5rem;
     border-radius: 50%;
-    transition: transform 0.3s ease;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+    filter: saturate(0.8);
 }
 
 .theme-toggle:hover {
-    transform: rotate(15deg);
+    transform: scale(1.1) rotate(15deg);
+    opacity: 1;
+    filter: saturate(1.2);
+}
+
+[data-theme="dark"] .theme-toggle {
+    filter: brightness(0.8) saturate(0.8);
+}
+
+[data-theme="dark"] .theme-toggle:hover {
+    filter: brightness(1) saturate(1.2);
 }
 
 h1 {

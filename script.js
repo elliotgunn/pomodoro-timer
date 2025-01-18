@@ -43,7 +43,6 @@ class PomodoroTimer {
 
     updateTheme() {
         document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light');
-        this.themeToggle.textContent = this.isDarkMode ? '🌜' : '🌞';
     }
 
     updateDisplay() {
