@@ -19,6 +19,21 @@ class PomodoroTimer {
         this.updateTheme();
 
         this.initializeEventListeners();
+
+        this.saladContainer = document.createElement('div');
+        this.saladContainer.id = 'salad-container';
+        this.saladContainer.className = 'tomato-container'; // Reuse the same container styles
+        document.body.appendChild(this.saladContainer);
+        this.activeSalads = [];
+
+        this.currentMode = 'pomodoro'; // Track current mode
+
+        // Create containers for different modes
+        this.breakContainer = document.createElement('div');
+        this.breakContainer.id = 'break-container';
+        this.breakContainer.className = 'tomato-container';
+        document.body.appendChild(this.breakContainer);
+        this.activeBreakEmojis = [];
     }
 
     initializeEventListeners() {
@@ -57,7 +72,35 @@ class PomodoroTimer {
     setTime(minutes) {
         this.timeLeft = minutes * 60;
         this.updateDisplay();
-        this.pause();
+
+        // Update current mode based on time
+        if (minutes === 25) {
+            this.currentMode = 'pomodoro';
+        } else if (minutes === 5) {
+            this.currentMode = 'short-break';
+        } else if (minutes === 15) {
+            this.currentMode = 'long-break';
+        }
+
+        this.stopTimer(); // Stop timer without salads
+
+        // Immediately show appropriate emojis for the new mode
+        for (let i = 0; i < 10; i++) {
+            if (this.currentMode === 'pomodoro') {
+                this.createTomato();
+            } else {
+                this.createBreakEmoji(this.currentMode);
+            }
+        }
+    }
+
+    stopTimer() {
+        this.isRunning = false;
+        if (this.timerId) {
+            clearInterval(this.timerId);
+            this.timerId = null;
+        }
+        this.clearAllEmojis();
     }
 
     createTomato() {
@@ -87,6 +130,82 @@ class PomodoroTimer {
         this.activeTomatoes.push(tomato);
     }
 
+    createSalad() {
+        const salad = document.createElement('div');
+        salad.className = 'bouncing-tomato'; // Reuse the same animation
+        salad.textContent = '🥗';
+
+        // Random starting position
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight;
+
+        // Random movement values
+        const xMove = (Math.random() - 0.5) * 300;
+        const yMove = (Math.random() - 0.5) * 300;
+
+        salad.style.left = `${startX}px`;
+        salad.style.top = `${startY}px`;
+        salad.style.setProperty('--x-move', `${xMove}px`);
+        salad.style.setProperty('--x-move-rev', `${-xMove}px`);
+        salad.style.setProperty('--y-move', `${yMove}px`);
+        salad.style.setProperty('--y-move-rev', `${-yMove}px`);
+
+        // Random animation duration between 3 and 6 seconds
+        salad.style.animationDuration = `${3 + Math.random() * 3}s`;
+
+        this.saladContainer.appendChild(salad);
+        this.activeSalads.push(salad);
+
+        // Remove the salad after animation
+        setTimeout(() => {
+            salad.remove();
+            this.activeSalads = this.activeSalads.filter(s => s !== salad);
+        }, 3000);
+    }
+
+    createBreakEmoji(mode) {
+        const emoji = document.createElement('div');
+        emoji.className = 'bouncing-tomato';
+
+        // Set emoji based on mode
+        if (mode === 'short-break') {
+            emoji.textContent = '💤';
+        } else if (mode === 'long-break') {
+            emoji.textContent = '🏖️';
+        } else {
+            emoji.textContent = '🍅';
+        }
+
+        // Random starting position
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight;
+
+        // Random movement values
+        const xMove = (Math.random() - 0.5) * 300;
+        const yMove = (Math.random() - 0.5) * 300;
+
+        emoji.style.left = `${startX}px`;
+        emoji.style.top = `${startY}px`;
+        emoji.style.setProperty('--x-move', `${xMove}px`);
+        emoji.style.setProperty('--x-move-rev', `${-xMove}px`);
+        emoji.style.setProperty('--y-move', `${yMove}px`);
+        emoji.style.setProperty('--y-move-rev', `${-yMove}px`);
+        emoji.style.animationDuration = `${3 + Math.random() * 3}s`;
+
+        this.breakContainer.appendChild(emoji);
+        this.activeBreakEmojis.push(emoji);
+    }
+
+    clearAllEmojis() {
+        // Clear all types of emojis
+        this.activeTomatoes.forEach(tomato => tomato.remove());
+        this.activeTomatoes = [];
+        this.activeSalads.forEach(salad => salad.remove());
+        this.activeSalads = [];
+        this.activeBreakEmojis.forEach(emoji => emoji.remove());
+        this.activeBreakEmojis = [];
+    }
+
     start() {
         if (!this.isRunning) {
             this.isRunning = true;
@@ -99,7 +218,8 @@ class PomodoroTimer {
                 }
             }, 1000);
 
-            // Create bouncing tomatoes
+            this.clearAllEmojis();
+            // Always create tomatoes when starting
             for (let i = 0; i < 10; i++) {
                 this.createTomato();
             }
@@ -107,14 +227,11 @@ class PomodoroTimer {
     }
 
     pause() {
-        this.isRunning = false;
-        if (this.timerId) {
-            clearInterval(this.timerId);
-            this.timerId = null;
+        this.stopTimer();
+        // Only show salads when explicitly pausing
+        for (let i = 0; i < 10; i++) {
+            this.createSalad();
         }
-        // Remove all tomatoes
-        this.activeTomatoes.forEach(tomato => tomato.remove());
-        this.activeTomatoes = [];
     }
 
     reset() {
